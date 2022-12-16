@@ -25,12 +25,14 @@ module.exports = function (fastify, opts, done) {
       }
       if(cache){
         console.log('FOUND HASH');
-        return JSON.parse(cache);
+        let parse = JSON.parse(cache);
+        return parse;
       }
       else{
         let hash = {};
         let funcArr = [];
         let dateArr = [];
+        let hashArr = [];
         let rejectFlag = false;
         //CREATE ARRAY OF AXIOS CALLS TO BATCH
         for(let i =0; i < month; i++){
@@ -63,12 +65,18 @@ module.exports = function (fastify, opts, done) {
         //SAVE HASH TO REDIS FOR CACHE
         if(!rejectFlag){
           console.log('SAVING HASH')
-          let str = JSON.stringify({...hash}) 
-          if(str == null);
-          redis.set(`month${first}`, str)
+          //ITERATE THROUGH HASH TO MAKE IT LESS DEEP
+          Object.keys(hash).forEach((item) => {
+              hashArr.push({articleName: item, views: hash[item].views, most: hash[item].most, date: hash[item].date});
+            }
+          )
+          let str = JSON.stringify({hashArr}) 
+          if(str !== null){
+            redis.set(`month${first}`, str)
+          }
         }
-        if(Object.entries(hash) !== 0){
-          return { ...hash };
+        if(hashArr.length > 0){
+          return hashArr;
         }
         else{
           reply.header('Cache-Control', 'no-store').code(500).send({message: "ERROR PULLING FROM WIKIAPI, POSSIBLE INVALID DATE"});

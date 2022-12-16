@@ -23,6 +23,7 @@
     "@fastify/redis": "^6.1.0",
     "@fastify/swagger": "^8.2.1",
     "axios": "^1.2.1",
+    "dotenv": "^16.0.3",
     "fastify": "^4.10.2",
     "fastify-autoload": "^3.13.0",
     "moment": "^2.29.4"
