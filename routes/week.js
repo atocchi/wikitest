@@ -29,40 +29,52 @@ module.exports = function (fastify, opts, done) {
       }
       else{
         let hash = {};
+        let funcArr = [];
+        let dateArr = [];
+        let rejectFlag = false;
+        //CREATE ARRAY OF AXIOS CALLS TO BATCH
         for(let i =0; i < 7; i++){
             let date = moment(firstDay, "YYYY/MM/DD").add(i, 'd').format("YYYY/MM/DD");
-            try{
-              const data = await axios(`https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/${date}`);
-              data.data.items[0].articles.map( item => {
-                  if(hash[item.article] === undefined){ 
-                  hash[item.article] = {views: item.views, most: item.views, date: date};
-                  }
-                  else{
-                  if(hash[item.article].most < item.views){
-                      hash[item.article] = {views: hash[item.article].views + item.views, most : item.views, date: date};
-                  }
-                  else{
-                      hash[item.article] = {views: hash[item.article].views + item.views, most : hash[item.article].most, date: hash[item.article].date};
-                  }
-                  }
-              })
-            }
-            catch(err){
-              //RETURN PARTIAL HASH  FOR INCOMPLETE WEEK; DO NOT CACHE
-              if(hash !== {}){
-                return { ...hash};
+            dateArr.push(date);
+            funcArr.push(axios(`https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/${date}`));
+        }
+        data = await Promise.allSettled(funcArr);
+        for(i = 0; i < data.length; i++){
+          let newMap = data[i];
+          if(newMap.status === 'fulfilled'){
+            newMap.value.data.items[0].articles.map( item => {
+              if(hash[item.article] === undefined){ 
+                hash[item.article] = {views: item.views, most: item.views, date: dateArr[i]};
               }
-              //LOG ERROR FOR CLOUDWATCH ETC. BUT DO NOT SEND TO USER, DO NOT CACHE ERROR
-              console.log(err);
-              reply.header('Cache-Control', 'no-store').code(500).send({message: "ERROR PULLING FROM WIKIAPI, POSSIBLE INVALID DATE"});
-            }
+              else{
+                if(hash[item.article].most < item.views){
+                  hash[item.article] = {views: hash[item.article].views + item.views, most : item.views, date: dateArr[i]};
+                }
+                else{
+                  hash[item.article] = {views: hash[item.article].views + item.views, most : hash[item.article].most, date: hash[item.article].date};
+                }
+              }
+            })
+          }
+          else{
+            rejectFlag = true;
+          }
         }
         //SAVE HASH TO REDIS FOR CACHE
-        let str = JSON.stringify({...hash}) 
-        redis.set(firstDay, str)
-        return { ...hash }
+        if(!rejectFlag){
+          console.log('SAVING HASH')
+          let str = JSON.stringify({...hash}) 
+          if(str == null);
+          redis.set(firstDay, str)
+        }
+        if(Object.entries(hash) !== 0){
+          return { ...hash };
+        }
+        else{
+          reply.header('Cache-Control', 'no-store').code(500).send({message: "ERROR PULLING FROM WIKIAPI, POSSIBLE INVALID DATE"});
+        }
       }
-    })
+    })    
   done();
 }
 
