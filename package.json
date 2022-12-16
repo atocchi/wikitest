@@ -1,0 +1,30 @@
+{
+  "name": "wikitest",
+  "version": "1.0.0",
+  "description": "wikipedia wrapper",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atocchi/wikitest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/atocchi/wikitest/issues"
+  },
+  "homepage": "https://github.com/atocchi/wikitest#readme",
+  "dependencies": {
+    "@fastify/autoload": "^4.0.0",
+    "@fastify/redis": "^6.1.0",
+    "@fastify/swagger": "^8.2.1",
+    "axios": "^1.2.1",
+    "fastify": "^4.10.2",
+    "fastify-autoload": "^3.13.0",
+    "moment": "^2.29.4"
+  }
+}
