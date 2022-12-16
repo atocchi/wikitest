@@ -26,7 +26,7 @@ module.exports = function (fastify, opts, done) {
       if(cache){
         console.log('FOUND HASH');
         let parse = JSON.parse(cache);
-        return parse;
+        return parse.hashArr;
       }
       else{
         let hash = {};

@@ -23,7 +23,7 @@ For **week**
 Both endpoints should return the following JSON
 ```
     [
-        {"<articleName": string, "views": int, "most": int, "date": string },
+        {"articleName": string, "views": int, "most": int, "date": string },
         ...
     ]
 ```
