@@ -62,11 +62,11 @@ module.exports = function (fastify, opts, done) {
             rejectFlag = true;
           }
         }
+        //ITERATE THROUGH HASH TO MAKE IT LESS DEEP
+        hashArr = Object.values(hash);
         //SAVE HASH TO REDIS FOR CACHE
         if(!rejectFlag){
           console.log('SAVING HASH')
-          //ITERATE THROUGH HASH TO MAKE IT LESS DEEP
-          hashArr = Object.values(hash);
           let str = JSON.stringify({hashArr}) 
           if(str !== null){
             redis.set(`month${first}`, str)
