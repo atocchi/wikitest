@@ -46,14 +46,14 @@ module.exports = function (fastify, opts, done) {
           if(newMap.status === 'fulfilled'){
             newMap.value.data.items[0].articles.map( item => {
               if(hash[item.article] === undefined){ 
-                hash[item.article] = {views: item.views, most: item.views, date: dateArr[i]};
+                hash[item.article] = {articleName: item.article, views: item.views, most: item.views, date: dateArr[i]};
               }
               else{
                 if(hash[item.article].most < item.views){
-                  hash[item.article] = {views: hash[item.article].views + item.views, most : item.views, date: dateArr[i]};
+                  hash[item.article] = {articleName: item.article, views: hash[item.article].views + item.views, most : item.views, date: dateArr[i]};
                 }
                 else{
-                  hash[item.article] = {views: hash[item.article].views + item.views, most : hash[item.article].most, date: hash[item.article].date};
+                  hash[item.article] = {articleName: item.article, views: hash[item.article].views + item.views, most : hash[item.article].most, date: hash[item.article].date};
                 }
               }
             })
@@ -66,10 +66,7 @@ module.exports = function (fastify, opts, done) {
         if(!rejectFlag){
           console.log('SAVING HASH')
           //ITERATE THROUGH HASH TO MAKE IT LESS DEEP
-          Object.keys(hash).forEach((item) => {
-              hashArr.push({articleName: item, views: hash[item].views, most: hash[item].most, date: hash[item].date});
-            }
-          )
+          hashArr = Object.values(hash);
           let str = JSON.stringify({hashArr}) 
           if(str !== null){
             redis.set(`month${first}`, str)

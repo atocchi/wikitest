@@ -4,13 +4,12 @@ wikipedia wrapper
 STEPS TO SETUP
 1. Install NODE 17 + and NPM 8 +
 2. Install redis v7 + 
-3. Redis will require you to create a password, remember this, you will need it later
-4. start redis server with `redis-server`
-5. note the port, default is `6379`
-6. Setup .env file with vars, `HOST`and `PORT`, this will be used for Redis your HOST is your localhost
-7. Add var for `SERVER_PORT`, I used `3000` for my default 
-8. Run `npm i` in root directory, `/wikitest/`
-9. Run `npm start` to start server, you should see fastify intiate logging, base urlshould be `http://localhost:3000/`
+3. start redis server with `redis-server`
+4. note the port, default is `6379`
+5. Setup .env file with vars, `HOST`and `PORT`, this will be used for Redis your HOST is your localhost
+6. Add var for `SERVER_PORT`, I used `3000` for my default 
+7. Run `npm i` in root directory, `/wikitest/`
+8. Run `npm start` to start server, you should see fastify intiate logging, base urlshould be `http://localhost:3000/`
 
 ENDPOINTS
 
