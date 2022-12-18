@@ -66,8 +66,7 @@ module.exports = function (fastify, opts, done) {
         hashArr = Object.values(hash);
         //SAVE HASH TO REDIS FOR CACHE
         if(!rejectFlag){
-          console.log('SAVING HASH')
-          console.log(hashArr)
+          console.log('SAVING HASH')  
           let str = JSON.stringify({hashArr}) 
           if(str !== null){
             redis.set(firstDay, str)
@@ -77,7 +76,7 @@ module.exports = function (fastify, opts, done) {
           return hashArr;
         }
         else{
-          reply.header('Cache-Control', 'no-store').code(500).send({message: "ERROR PULLING FROM WIKIAPI, POSSIBLE INVALID DATE"});
+          reply.header('Cache-Control', 'no-store').code(500).send({message: "ERROR PULLING FROM WIKIAPI, POSSIBLE INVALID DATE; DATES MIGHT NOT BE IN WIKIPEDIA API YET"});
         }
       }
     })    

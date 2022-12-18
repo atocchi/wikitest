@@ -15,7 +15,8 @@ test('requests the "/v1/week" route', async t => {
   })
   t.equal(response.statusCode, 200, 'returns a status code of 200')
 
-  let date = moment().format('YYYY-MM-DD');
+  //Remove 1 day to account for early first day of week not being uploaded to wikipedia Yet
+  let date = moment().subtract(1, 'd').format('YYYY-MM-DD');
   let future = moment(date, 'YYYY-MM-DD').add(14,'d').format("YYYY-MM-DD");
 
   const response2 = await app.inject({

@@ -76,7 +76,7 @@ module.exports = function (fastify, opts, done) {
           return hashArr;
         }
         else{
-          reply.header('Cache-Control', 'no-store').code(500).send({message: "ERROR PULLING FROM WIKIAPI, POSSIBLE INVALID DATE"});
+          reply.header('Cache-Control', 'no-store').code(500).send({message: "ERROR PULLING FROM WIKIAPI, POSSIBLE INVALID DATE; DATES MIGHT NOT BE IN WIKIPEDIA API YET"});
         }
       }
     })    
